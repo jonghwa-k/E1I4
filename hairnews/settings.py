@@ -38,13 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third-party
+
     'django_seed',
+    'django_extensions',
     'rest_framework',
+    'django_filters', # django-filter 추가
     'rest_framework_simplejwt.token_blacklist',
-    # local
-    'articles',
+
     'accounts',
+    'articles',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +91,27 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = "accounts.User"
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],  # 필터 백엔드 설정
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # 페이지네이션 기본 클래스
+    'PAGE_SIZE': 10,  # 한 페이지당 10개 항목 표시
+
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 
 # REST_FRAMEWORK = {
 # "DEFAULT_AUTHENTICATION_CLASSES": [
