@@ -26,10 +26,16 @@ class UserCreateView(APIView):
 
         #상위코드 간소화
         user = User.objects.create_user(**request.data)
+        
+        refresh=RefreshToken.for_user(user) # 토큰발급        
 
         serializer = UserSerializer(user)
-        return Response(serializer.data, status=200)
-    
+        response_dict=serializer.data
+        response_dict['access'] = str(refresh.access_token)
+        response_dict['refresh'] = str(refresh)
+        return Response(response_dict)
+
+
 class UserLoginView(APIView):
     def post(self, request):
         username= request.data.get("username")
@@ -41,7 +47,6 @@ class UserLoginView(APIView):
         
         
         refresh=RefreshToken.for_user(user)
-
         return Response(
             {
                 'refresh': str(refresh),
