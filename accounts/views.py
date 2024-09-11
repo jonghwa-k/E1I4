@@ -58,7 +58,7 @@ class UserLoginView(APIView):
                 'access': str(refresh.access_token),
             }
         )
-    
+
 
 class UserProfileView(APIView):
     def get(self, request, username):
@@ -66,8 +66,8 @@ class UserProfileView(APIView):
         serializer=UserProfileSerializer(user)
         return Response(serializer.data)
 
-class LogoutView(APIView):
 
+class LogoutView(APIView):
     def post(self, request):
         refresh_token = request.data.get('refresh')
 
@@ -76,7 +76,8 @@ class LogoutView(APIView):
         token = RefreshToken(refresh_token) # RefreshToken 객체 생성
         token.blacklist() # 블랙리스트에 추가
         return Response({"message":"로그아웃 성공!"}, status=205)
-    
+
+
 class UserPasswordChangeView(APIView):
     def put(self, request):
         old_password = request.data.get("old_password")
@@ -91,3 +92,13 @@ class UserPasswordChangeView(APIView):
         request.user.set_password(new_password)
         request.user.save()
         return Response({"message":"비밀번호 변경 성공!"}, status=200)
+
+
+class UserWithdraView(APIView):
+    def post(self, request):
+        old_password = request.data.get("old_password")
+        if not request.user.check_password(old_password):
+            return Response({"message": "이전 비밀번호가 틀렸습니다"}, status=400)
+
+        request.user.delete()
+        return Response({"message":"회원탈퇴 성공!!"}, status=200)
