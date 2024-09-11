@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from .models import User
 from .validators import validate_user_data
@@ -67,6 +67,7 @@ class UserProfileView(APIView):
         return Response(serializer.data)
 
 class LogoutView(APIView):
+
     def post(self, request):
         refresh_token = request.data.get('refresh')
 
@@ -75,3 +76,18 @@ class LogoutView(APIView):
         token = RefreshToken(refresh_token) # RefreshToken 객체 생성
         token.blacklist() # 블랙리스트에 추가
         return Response({"message":"로그아웃 성공!"}, status=205)
+    
+class UserPasswordChangeView(APIView):
+    def put(self, request):
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+
+        if not old_password or not new_password:
+            return Response({"message": "이전 비밀번호와 새 비밀번호를 모두 입력해주세요!"}, status=400)
+
+        if not request.user.check_password(old_password):
+            return Response({"message": "이전 비밀번호가 틀렸습니다"}, status=400)
+
+        request.user.set_password(new_password)
+        request.user.save()
+        return Response({"message":"비밀번호 변경 성공!"}, status=200)
