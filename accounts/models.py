@@ -4,5 +4,5 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     nickname = models.CharField(max_length=10, unique=True)
-    name = models.CharField(max_length=10, unique=True)
-    bio = models.TextField(null=True,blank=True)
+    name = models.CharField(max_length=15, unique=True)
+    bio = models.TextField(null=True, blank=True)
