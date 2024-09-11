@@ -100,5 +100,6 @@ class UserWithdraView(APIView):
         if not request.user.check_password(old_password):
             return Response({"message": "이전 비밀번호가 틀렸습니다"}, status=400)
 
-        request.user.delete()
-        return Response({"message":"회원탈퇴 성공!!"}, status=200)
+        request.user.is_active=False
+        request.user.save()
+        return Response({"message":"회원탈퇴성공!!"}, status=200)
