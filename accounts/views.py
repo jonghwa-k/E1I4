@@ -94,7 +94,7 @@ class UserPasswordChangeView(APIView):
         return Response({"message":"비밀번호 변경 성공!"}, status=200)
 
 
-class UserWithdraView(APIView):
+class UserDeleteView(APIView):
     def post(self, request):
         old_password = request.data.get("old_password")
         if not request.user.check_password(old_password):
