@@ -65,3 +65,13 @@ class UserProfileView(APIView):
         user= get_object_or_404(User, username=username)
         serializer=UserProfileSerializer(user)
         return Response(serializer.data)
+
+class LogoutView(APIView):
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+
+        if not refresh_token:
+            return Response({"message": '로그아웃 실패!'}, status=400)
+        token = RefreshToken(refresh_token) # RefreshToken 객체 생성
+        token.blacklist() # 블랙리스트에 추가
+        return Response({"message":"로그아웃 성공!"}, status=205)
