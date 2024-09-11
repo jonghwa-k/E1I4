@@ -46,9 +46,12 @@ class UserLoginView(APIView):
         username= request.data.get("username")
         password= request.data.get("password")
 
+        if not User.objects.filter(username=username).exists():
+            return Response({"message": "아이디가 틀렸습니다."}, status=400)
+        
         user = authenticate(username=username, password=password)
         if not user:
-            return Response({"message": "아이디 또는 비밀번호가 틀렸습니다."}, status=400)
+            return Response({"message": "비밀번호가 틀렸습니다."}, status=400)
         
         
         refresh=RefreshToken.for_user(user)
@@ -96,8 +99,8 @@ class UserPasswordChangeView(APIView):
 
 class UserDeleteView(APIView):
     def post(self, request):
-        old_password = request.data.get("old_password")
-        if not request.user.check_password(old_password):
+        password = request.data.get("password")
+        if not request.user.check_password(password):
             return Response({"message": "이전 비밀번호가 틀렸습니다"}, status=400)
 
         request.user.is_active=False
