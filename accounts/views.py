@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import User
-from .serializers import SignupSerializer
+from .serializers import SignupSerializer, ProfileUpdateSerializer
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import get_object_or_404
 
@@ -38,9 +38,11 @@ class ProfileView(generics.RetrieveAPIView):
 
 class ProfileUpdateView(generics.UpdateAPIView):
     queryset = User.objects.all()
-    serializer_class = SignupSerializer
+    serializer_class = ProfileUpdateSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'username'
+    
+    
 
 class ChangePasswordView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -76,6 +78,13 @@ class DeleteAccountView(views.APIView):
 
         user.delete()
         return Response({"detail": "Account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+        # Deactivate the account instead of deleting it
+        user.is_active = False
+        user.deactivation_date = timezone.now()  # Set the current time as deactivation date
+        user.save()
+
+        return Response({"detail": "Account deactivated successfully. It will be permanently deleted in 30 days."}, status=status.HTTP_204_NO_CONTENT)
 
 class FollowView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -19,6 +19,9 @@ class User(AbstractUser):
 
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
+    is_active = models.BooleanField(default=True)  # Standard field for deactivating accounts
+    deactivation_date = models.DateTimeField(null=True, blank=True)  # Stores the date of deactivation
+
     def follow(self, user):
         if user != self:
             self.following.add(user)

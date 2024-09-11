@@ -54,3 +54,9 @@ class SignupSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'nickname', 'bio']  # Only include the fields that can be updated
+        read_only_fields = ['username']  # Make the username read-only for updates
