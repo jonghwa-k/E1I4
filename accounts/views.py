@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .models import User
 from .validators import validate_user_data
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserProfileSerializer
 
 
 class UserCreateView(APIView):
@@ -37,6 +37,7 @@ class UserCreateView(APIView):
 
 
 class UserLoginView(APIView):
+
     def post(self, request):
         username= request.data.get("username")
         password= request.data.get("password")
@@ -53,3 +54,10 @@ class UserLoginView(APIView):
                 'access': str(refresh.access_token),
             }
         )
+    
+
+class UserProfileView(APIView):
+    def get(self, request, username):
+        user= get_object_or_404(User, username=username)
+        serializer=UserProfileSerializer(user)
+        return Response(serializer.data)

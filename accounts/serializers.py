@@ -5,3 +5,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'nickname')
+
+class UserProfileSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ('bio',)
