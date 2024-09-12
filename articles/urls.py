@@ -7,8 +7,7 @@ urlpatterns = [
     path('<int:pk>/', ArticleDetailAPIView.as_view(), name='article-detail'),
     path('categories/', CategoryListCreateAPIView.as_view(), name='category-list-create'),
     path('<int:article_id>/like/', ArticleLikeView.as_view(), name='article-like'),
-    path('<int:article_id>/comments/', CommentListView.as_view(), name='comment-list'),
-    path('<int:article_id>/comments/add/', CommentCreateView.as_view(), name='comment-create'),
+    path('<int:article_id>/comments/', CommentCreateView.as_view(), name='comment-create'),
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment-edit'),
 ]

@@ -3,7 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from .models import Article, Category, Comment
 from .serializers import ArticleSerializer, CategorySerializer, CommentSerializer
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from django.shortcuts import get_object_or_404
 
 # 카테고리 목록 조회 및 등록 (관리자만 생성 가능)
@@ -17,8 +17,8 @@ class ArticleListCreateAPIView(generics.ListCreateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['title', 'description', 'created_by__username', 'category']
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'description', 'created_by__username', 'category']
     pagination_class = PageNumberPagination
 
     def perform_create(self, serializer):
@@ -50,20 +50,18 @@ class ArticleLikeView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, article_id):
+        # 게시물 가져오기
         article = get_object_or_404(Article, id=article_id)
+        
+        # 사용자가 이미 좋아요 했는지 확인
         if article.likes.filter(id=request.user.id).exists():
-            return Response({"detail": "Already liked this article."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        article.likes.add(request.user)
-        return Response({"detail": "Article liked."}, status=status.HTTP_200_OK)
-
-    def delete(self, request, article_id):
-        article = get_object_or_404(Article, id=article_id)
-        if not article.likes.filter(id=request.user.id).exists():
-            return Response({"detail": "You haven't liked this article."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        article.likes.remove(request.user)
-        return Response({"detail": "Article unliked."}, status=status.HTTP_200_OK)
+            # 이미 좋아요 상태인 경우 -> 좋아요 취소
+            article.likes.remove(request.user)
+            return Response({"liked": False}, status=status.HTTP_200_OK)
+        else:
+            # 좋아요 상태가 아닌 경우 -> 좋아요 추가
+            article.likes.add(request.user)
+            return Response({"liked": True}, status=status.HTTP_200_OK)
 
 # 댓글 생성 View
 class CommentCreateView(generics.CreateAPIView):

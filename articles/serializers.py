@@ -14,16 +14,25 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name']
 
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'author', 'text', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'author', 'created_at', 'updated_at']
+        
 # Article(게시글) 모델에 대한 Serializer
 class ArticleSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     category = serializers.ChoiceField(choices=[('News', 'News'), ('자유게시판', '자유게시판')])
+    comments = CommentSerializer(many=True, read_only=True)  # 댓글 리스트 추가
     total_likes = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Article
-        fields = ['id', 'title', 'description', 'image', 'created_at', 'created_by', 'category', 'total_likes']
-        read_only_fields = ['id', 'created_at', 'created_by']
+        fields = ['id', 'title', 'description', 'image', 'created_at', 'created_by', 'category', 'total_likes', 'comments']
+        read_only_fields = ['id', 'created_at', 'created_by', 'comments', 'total_likes']
 
     def create(self, validated_data):
         article = Article.objects.create(**validated_data)
@@ -37,11 +46,3 @@ class ArticleSerializer(serializers.ModelSerializer):
         instance.category = validated_data.get('category', instance.category)  # 수정 시 카테고리는 선택적
         instance.save()
         return instance
-
-class CommentSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Comment
-        fields = ['id', 'author', 'text', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'author', 'created_at', 'updated_at']
