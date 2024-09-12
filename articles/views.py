@@ -48,3 +48,10 @@ class ArticleDetailAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        article = get_object_or_404(Article, id=pk)
+        if article.author != request.user:
+            return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        article.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
