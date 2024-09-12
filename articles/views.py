@@ -34,13 +34,16 @@ class ArticleDetailAPIView(APIView):
             return [AllowAny()]
         return [permission() for permission in self.permission_classes]
 
+    def get_object(self, pk):
+        return get_object_or_404(Article, pk=pk)
+
     def get(self, request, pk):
-        article = get_object_or_404(Article, id=pk)
+        article = self.get_object(pk)
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        article = get_object_or_404(Article, id=pk)
+        article = self.get_object(pk)
         if article.author != request.user:
             return Response({'error': '수정 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         serializer = ArticleSerializer(article, data=request.data, partial=True)
@@ -50,7 +53,7 @@ class ArticleDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
-        article = get_object_or_404(Article, id=pk)
+        article = self.get_object(pk)
         if article.author != request.user:
             return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         article.delete()
