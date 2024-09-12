@@ -104,3 +104,47 @@ class CommentUpdateView(generics.UpdateAPIView):
         if self.request.user != comment.author:
             raise serializers.ValidationError({"error": "You do not have permission to edit this comment."})
         serializer.save()
+
+
+# 내가 좋아요한 게시글 목록 보기
+class LikedArticlesListView(generics.ListAPIView):
+    serializer_class = ArticleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        # 사용자가 좋아요한 게시글만 반환
+        return Article.objects.filter(likes=self.request.user)
+
+
+# 내가 좋아요한 댓글 목록 보기
+class LikedCommentsListView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        # 사용자가 좋아요한 댓글만 반환 (댓글에 좋아요 기능이 있어야 함)
+        return Comment.objects.filter(likes=self.request.user)
+
+
+# 내가 작성한 글 목록 보기
+class MyArticlesListView(generics.ListAPIView):
+    serializer_class = ArticleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        # 사용자가 작성한 게시글만 반환
+        return Article.objects.filter(created_by=self.request.user)
+
+
+# 내가 작성한 댓글 목록 보기
+class MyCommentsListView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        # 사용자가 작성한 댓글만 반환
+        return Comment.objects.filter(author=self.request.user)

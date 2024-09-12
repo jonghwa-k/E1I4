@@ -11,6 +11,7 @@ class User(AbstractUser):
 
     bio = models.TextField(blank=True, null=True)
 
+
     is_active = models.BooleanField(default=True)  # Standard field for deactivating accounts
     deactivation_date = models.DateTimeField(null=True, blank=True)  # Stores the date of deactivation
 

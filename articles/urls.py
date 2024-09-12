@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ArticleListCreateAPIView, ArticleDetailAPIView, CategoryListCreateAPIView, ArticleLikeView, CommentCreateView, CommentListView, CommentDeleteView, CommentUpdateView
+from .views import ArticleListCreateAPIView, ArticleDetailAPIView, CategoryListCreateAPIView, ArticleLikeView, CommentCreateView, CommentListView, CommentDeleteView, CommentUpdateView,LikedArticlesListView, LikedCommentsListView, MyArticlesListView, MyCommentsListView
 
 # URL 패턴 설정
 urlpatterns = [
@@ -10,4 +10,8 @@ urlpatterns = [
     path('<int:article_id>/comments/', CommentCreateView.as_view(), name='comment-create'),
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment-edit'),
+    path('liked/', LikedArticlesListView.as_view(), name='liked-articles'),
+    path('comments/liked/', LikedCommentsListView.as_view(), name='liked-comments'),
+    path('my/', MyArticlesListView.as_view(), name='my-articles'),
+    path('comments/my/', MyCommentsListView.as_view(), name='my-comments'),
 ]
