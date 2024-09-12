@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework import status
-from .serializers import ArticleSerializer
-from .models import Article
+from .serializers import ArticleSerializer, CommentSerializer
+from .models import Article, Comment
 from rest_framework.permissions import AllowAny
 
 
@@ -58,3 +58,32 @@ class ArticleDetailAPIView(APIView):
             return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         article.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentDetailAPIView(APIView):
+    def get_object(self, comment_pk):
+        return get_object_or_404(Comment, comment_pk)
+
+    def post(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(article=article)  
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def put(self, request, comment_pk):
+        comment = self.get_object(comment_pk)
+        if comment.author != request.user:
+            return Response({'error': '수정 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(data, serializer.data)
+    
+    def delete(self, request, comment_pk):
+        comment = self.get_object(comment_pk)
+        if comment.author != request.user:
+            return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        comment.delete()
+        data = {"해당 댓글이 삭제되었습니다."}
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
