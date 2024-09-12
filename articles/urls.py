@@ -6,7 +6,8 @@ from django.conf import settings
 urlpatterns = [
     path("", views.AriticleCreateAPIView.as_view()),
     path("<int:pk>/", views.ArticleDetailAPIView.as_view()),
-    path("<int:pk>/comments/", views.CommentDetailAPIView.as_view()),
+    path("<int:pk>/comments/", views.CommentCreateAPIView.as_view()),
+    path("comments/<int:comment_pk>/", views.CommentDetailAPIView.as_view()),
 ]
 
 

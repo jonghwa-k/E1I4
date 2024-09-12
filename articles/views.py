@@ -24,7 +24,7 @@ class AriticleCreateAPIView(APIView):
         articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
-    
+
 
 # 글 상세페이지 조회, 글 수정, 글 삭제
 # 글 상세페이지는 비회원도 볼 수 있음
@@ -60,16 +60,18 @@ class ArticleDetailAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CommentDetailAPIView(APIView):
-    def get_object(self, comment_pk):
-        return get_object_or_404(Comment, comment_pk)
-
+class CommentCreateAPIView(APIView):
     def post(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(article=article)  
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CommentDetailAPIView(APIView):
+    def get_object(self, comment_pk):
+        return get_object_or_404(Comment, pk=comment_pk)
     
     def put(self, request, comment_pk):
         comment = self.get_object(comment_pk)
@@ -78,12 +80,11 @@ class CommentDetailAPIView(APIView):
         serializer = CommentSerializer(comment, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(data, serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
     
     def delete(self, request, comment_pk):
         comment = self.get_object(comment_pk)
         if comment.author != request.user:
             return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         comment.delete()
-        data = {"해당 댓글이 삭제되었습니다."}
-        return Response(data, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

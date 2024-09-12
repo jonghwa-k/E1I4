@@ -16,17 +16,7 @@ class Article(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField()
     created_at= models.DateTimeField(auto_now_add=True)
     updated_at= models.DateTimeField(auto_now=True)
-
-
-class ArticleLike(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes_a")
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="likes_a")
-
-
-class CommentLike(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes_c")
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="likes_c")

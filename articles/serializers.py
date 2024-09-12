@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import Article
-from .models import Comment
+from .models import Article, Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -11,8 +10,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True, read_only = True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Article
-        fields = ('id', "title", "content","image","url","author")
+        fields = ('id', "title", "content", "image", "url", "author", "comments")
