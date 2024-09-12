@@ -24,3 +24,15 @@ class AriticleCreateAPIView(APIView):
         articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
+    
+
+# 글 상세페이지 조회, 글 수정, 글 삭제
+# 글 상세페이지는 비회원도 볼 수 있음
+class ArticleDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+
+    def get(self, request, pk):
+        article = get_object_or_404(Article, id=pk)
+        serializer = ArticleSerializer(article)
+        return Response(serializer.data)

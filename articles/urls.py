@@ -4,8 +4,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path("", views.AriticleCreateAPIView.as_view())
-    
+    path("", views.AriticleCreateAPIView.as_view()),
+    path("<int:pk>/", views.ArticleDetailAPIView.as_view())
 ]
 
 
