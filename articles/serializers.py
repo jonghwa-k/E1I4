@@ -28,21 +28,20 @@ class ArticleSerializer(serializers.ModelSerializer):
     category = serializers.ChoiceField(choices=[('News', 'News'), ('자유게시판', '자유게시판')])
     comments = CommentSerializer(many=True, read_only=True)  # 댓글 리스트 추가
     total_likes = serializers.IntegerField(read_only=True)
+    popularity = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Article
-        fields = ['id', 'title', 'description', 'image', 'created_at', 'created_by', 'category', 'total_likes', 'comments']
-        read_only_fields = ['id', 'created_at', 'created_by', 'comments', 'total_likes']
+        fields = ['id', 'title', 'description', 'image', 'created_at', 'updated_at', 'created_by', 'category', 'total_likes', 'comments', 'popularity']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'created_by', 'comments', 'total_likes', 'popularity']
+
 
     def create(self, validated_data):
-        article = Article.objects.create(**validated_data)
-        return article
+        return Article.objects.create(**validated_data)
+
 
     def update(self, instance, validated_data):
-        # 게시물 수정 시 category 필드는 선택적
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.image = validated_data.get('image', instance.image)
-        instance.category = validated_data.get('category', instance.category)  # 수정 시 카테고리는 선택적
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
         return instance
