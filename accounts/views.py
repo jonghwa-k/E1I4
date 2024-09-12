@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import status, views, generics, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -70,35 +71,19 @@ class DeleteAccountView(views.APIView):
         user = request.user
         password = request.data.get("password")
 
+        # Check if password is provided
         if not password:
             return Response({"detail": "Password is required."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Verify that the provided password is correct
         if not user.check_password(password):
             return Response({"detail": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
 
-        user.delete()
-        return Response({"detail": "Account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-
         # Deactivate the account instead of deleting it
-        user.is_active = False
-        user.deactivation_date = timezone.now()  # Set the current time as deactivation date
-        user.save()
+        user.is_active = False  # Set the is_active field to False
+        user.deactivation_date = timezone.now()  # Set the current time as the deactivation date
+        user.save()  # Save the updated user object
 
         return Response({"detail": "Account deactivated successfully. It will be permanently deleted in 30 days."}, status=status.HTTP_204_NO_CONTENT)
 
-class FollowView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, username):
-        target_user = get_object_or_404(User, username=username)
-        if request.user.is_following(target_user):
-            return Response({"detail": "Already following this user."}, status=status.HTTP_400_BAD_REQUEST)
-        request.user.follow(target_user)
-        return Response({"detail": f"Started following {target_user.username}."}, status=status.HTTP_200_OK)
-
-    def delete(self, request, username):
-            target_user = get_object_or_404(User, username=username)
-            if not request.user.is_following(target_user):
-                return Response({"detail": "Not following this user."}, status=status.HTTP_400_BAD_REQUEST)
-            request.user.unfollow(target_user)
-            return Response({"detail": f"Stopped following {target_user.username}."}, status=status.HTTP_200_OK)

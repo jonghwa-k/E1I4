@@ -22,20 +22,12 @@ class SignupSerializer(serializers.ModelSerializer):
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    birth_date = serializers.DateField(required=True)
-    gender = serializers.CharField(required=False, allow_blank=True)
     bio = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2', 'nickname', 'birth_date', 'gender', 'bio']
+        fields = ['username', 'email', 'password', 'password2', 'nickname', 'bio']
 
-    def validate_birth_date(self, value):
-        today = date.today()
-        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
-        if age < 18:
-            raise serializers.ValidationError("You must be at least 18 years old.")
-        return value
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -47,8 +39,6 @@ class SignupSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             nickname=validated_data.get('nickname'),
-            birth_date=validated_data.get('birth_date'),
-            gender=validated_data.get('gender', ''),
             bio=validated_data.get('bio', '')
         )
         user.set_password(validated_data['password'])

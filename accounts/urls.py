@@ -8,7 +8,7 @@ from .views import (
     ProfileView,
     ChangePasswordView,
     DeleteAccountView,
-    FollowView,
+    
 )
 
 urlpatterns = [
@@ -20,5 +20,5 @@ urlpatterns = [
     path("profile/<str:username>/update/", ProfileUpdateView.as_view(), name="profile-update"),
     path('password/change/', ChangePasswordView.as_view(), name='change-password'),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path('follow/<str:username>/', FollowView.as_view(), name='follow'),
+
 ]
