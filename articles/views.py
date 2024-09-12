@@ -29,10 +29,22 @@ class AriticleCreateAPIView(APIView):
 # 글 상세페이지 조회, 글 수정, 글 삭제
 # 글 상세페이지는 비회원도 볼 수 있음
 class ArticleDetailAPIView(APIView):
-    permission_classes = [AllowAny]
-
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
     def get(self, request, pk):
         article = get_object_or_404(Article, id=pk)
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        article = get_object_or_404(Article, id=pk)
+        if article.author != request.user:
+            return Response({'error': '수정 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        serializer = ArticleSerializer(article, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
