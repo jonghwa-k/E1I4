@@ -39,8 +39,9 @@ class ArticleDetailAPIView(APIView):
 
     def get(self, request, pk):
         article = self.get_object(pk)
+
         serializer = ArticleSerializer(article)
-        return Response(serializer.data)
+        return Response(serializer.data, )
 
     def put(self, request, pk):
         article = self.get_object(pk)
@@ -88,3 +89,24 @@ class CommentDetailAPIView(APIView):
             return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ArticleLikeAPIView(APIView):
+    def post(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        if request.user in article.likes.all():
+            article.likes.remove(request.user)
+            return Response("좋아요 취소", status=status.HTTP_200_OK)
+        else:
+            article.likes.add(request.user)
+            return Response("좋아요", status=status.HTTP_200_OK)
+
+class CommentLikeAPIView(APIView):
+    def post(self, request, comment_pk):
+        comment = get_object_or_404(Article, pk=comment_pk)
+        if request.user in comment.likes.all():
+            comment.likes.remove(request.user)
+            return Response("좋아요 취소", status=status.HTTP_200_OK)
+        else:
+            comment.likes.add(request.user)
+            return Response("좋아요", status=status.HTTP_200_OK)
