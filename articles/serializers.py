@@ -21,7 +21,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
-    category = serializers.StringRelatedField()  # 카테고리 이름 반환
+    category = serializers.ChoiceField(choices=[('News', 'News'), ('자유게시판', '자유게시판')])
 
     def get_like_count(self, obj):
         return obj.likes.all().count()
