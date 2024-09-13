@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Article, Comment, Category
 
-
 # 카테고리 Serializer
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,11 +18,10 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', "author", "article", "content", "created_at", "updated_at", "like_count")
         read_only_fields = ("article",)
 
-
 class ArticleSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
-    category = serializers.ChoiceField(choices=[('News', 'News'), ('자유게시판', '자유게시판')])
+    category = serializers.StringRelatedField()  # 카테고리 이름 반환
 
     def get_like_count(self, obj):
         return obj.likes.all().count()
