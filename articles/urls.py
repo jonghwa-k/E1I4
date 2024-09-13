@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path("", views.AriticleCreateAPIView.as_view()),
+    path("", views.ArticleCreateAPIView.as_view()),
     path("<int:pk>/", views.ArticleDetailAPIView.as_view()),
     path("<int:pk>/like/", views.ArticleLikeAPIView.as_view()),
     path("<int:pk>/comments/", views.CommentCreateAPIView.as_view()),
