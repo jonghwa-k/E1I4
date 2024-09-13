@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -65,9 +66,20 @@ class UserLoginView(APIView):
 
 class UserProfileView(APIView):
     def get(self, request, username):
-        user= get_object_or_404(User, username=username)
-        serializer=UserProfileSerializer(user)
+        user = get_object_or_404(User, username=username)
+        serializer = UserProfileSerializer(user)
         return Response(serializer.data)
+
+    def put(self, request, username):
+        user = get_object_or_404(User, username=username)
+        if request.user != user:
+            raise PermissionDenied("수정 권한이 없습니다")
+
+        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):
