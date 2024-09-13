@@ -30,37 +30,17 @@ class ArticleCreateAPIView(generics.ListCreateAPIView):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['title', 'content', 'author__username', 'category']
     filterset_fields = ['category']
-    ordering_fields = ['created_at', 'popularity']
+    ordering_fields = ['created_at']
     ordering = ['-created_at']
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-
-        # 인기도 계산 (좋아요 수 + 댓글 수 * 3 - 경과 일수 * 5)
-        queryset = queryset.annotate(
-            likes_count=Count('likes'),
-            comments_count=Count('comments'),
-            # 경과 일수를 직접 계산 (초 단위를 일 단위로 변환)
-            days_since_created=ExpressionWrapper(
-                (Now() - F('created_at')) / (60 * 60 * 24),  # 초를 일수로 변환
-                output_field=IntegerField()
-            )
-        ).annotate(
-            # 인기도 점수 계산: (좋아요 수 + 댓글 수 * 3 - 경과 일수 * 5)
-            popularity=F('likes_count') + F('comments_count') * 3 - F('days_since_created') * 5
-        )
-
-        # 요청된 경우 인기순 정렬
-        ordering = self.request.query_params.get('ordering')
-        if ordering == 'popularity':
-            return queryset.order_by('-popularity')
-
-        # 기본 최신순 정렬
-        return queryset.order_by('-created_at')
+        return super().get_queryset().order_by('-created_at')  # 최신순 정렬
 
     def perform_create(self, serializer):
+        # author 필드를 현재 요청한 사용자로 설정
         serializer.save(author=self.request.user)
+
 
 # 글 상세, 수정, 삭제 API
 class ArticleDetailAPIView(APIView):
@@ -81,7 +61,7 @@ class ArticleDetailAPIView(APIView):
 
     def put(self, request, pk):
         article = self.get_object(pk)
-        if article.created_by != request.user:
+        if article.author != request.user:  # 수정 권한 검사
             return Response({'error': '수정 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         serializer = ArticleSerializer(article, data=request.data, partial=True)
         if serializer.is_valid():
@@ -91,7 +71,7 @@ class ArticleDetailAPIView(APIView):
 
     def delete(self, request, pk):
         article = self.get_object(pk)
-        if article.created_by != request.user:
+        if article.author != request.user:  # 삭제 권한 검사
             return Response({'error': '삭제 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         article.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
