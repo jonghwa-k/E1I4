@@ -9,6 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
+    author = serializers.ReadOnlyField(source='author.username')
 
     def get_like_count(self, obj):
         return obj.likes.all().count()

@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import F, ExpressionWrapper, IntegerField, Count
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.timezone import now  # 현재 시간
 from django.db.models.functions import ExtractDay, Now
