@@ -19,6 +19,7 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ("article",)
 
 class ArticleSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')  # 작성자 필드를 읽기 전용으로 설정
     like_count = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
     category = serializers.ChoiceField(choices=[('News', 'News'), ('자유게시판', '자유게시판')])
@@ -28,4 +29,4 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', "title", "content", "image", "url", "author", "like_count", "comments", "category")
+        fields = ('id',  "category", "title", "image","content", "author",  "url", "like_count", "comments")
