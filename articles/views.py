@@ -2,11 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from rest_framework import status
-from .serializers import ArticleSerializer, CommentSerializer
-from .models import Article, Comment
+from rest_framework import status, generics, permissions
+from .serializers import ArticleSerializer, CommentSerializer, CategorySerializer
+from .models import Article, Comment, Category
 from rest_framework.permissions import AllowAny
 
+class CategoryListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAdminUser]
 
 class AriticleCreateAPIView(APIView):
     def get_permissions(self):
