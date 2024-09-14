@@ -9,17 +9,23 @@ def validate_user_data(user_data):
         nickname = user_data.get("nickname")  
         bio = user_data.get("bio")
 
+        err_message = []
+
         if len(nickname) > 15:
-            return "닉네임은 15글자 이하여야 합니다."
+            err_message.append("닉네임은 15글자 이하여야 합니다.")
         
         if len(password) < 8:
-            return "비밀번호를 8글자 이상 입력해주세요."
+            err_message.append("비밀번호를 8글자 이상 입력해주세요.")
         
         if User.objects.filter(username=username).exists():
-            return "이미 존재하는 아이디입니다."
+            err_message.append("이미 존재하는 아이디입니다.")
         
         if User.objects.filter(nickname=nickname).exists():
-            return "이미 존재하는 닉네임입니다."
+            err_message.append("이미 존재하는 닉네임입니다.")
         
         if not name:
-            return "이름을 필수로 입력해주세요!"
+            err_message.append("이름을 필수로 입력해주세요!"
+
+        if err_message:
+            return err_message
+        return None
