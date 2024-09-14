@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User
-from articles.serializers import ArticleSerializer, CommentSerializer
+from articles.serializers import ArticleSerializer, CommentSerializer, ArticleTitleSerializer
 from articles.models import Article
 from django.db.models import Sum
 
@@ -12,15 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(UserSerializer):
-    articles = ArticleSerializer(many=True, read_only=True)
+    articles = ArticleTitleSerializer(many=True, read_only=True)
     profile_comments = CommentSerializer(many=True, read_only=True)
     like_article_list = serializers.SerializerMethodField()
     like_comment_list = serializers.SerializerMethodField()
     karma = serializers.SerializerMethodField()  
 
-    def get_articles(self, obj):
-        articles = obj.article_set.all()  
-        return ArticleSerializer(articles, many=True).data
+    # def get_articles(self, obj):
+    #     articles = obj.article_set.all()
+    #     return ArticleSerializer(articles, many=True).data
 
     def get_like_article_list(self, obj):
         like_article = obj.like_article.all()

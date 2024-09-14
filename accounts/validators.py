@@ -24,7 +24,7 @@ def validate_user_data(user_data):
             err_message.append("이미 존재하는 닉네임입니다.")
         
         if not name:
-            err_message.append("이름을 필수로 입력해주세요!"
+            err_message.append("이름을 필수로 입력해주세요!")
 
         if err_message:
             return err_message
