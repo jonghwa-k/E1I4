@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from .models import User
 from .validators import validate_user_data
-from .serializers import UserSerializer, UserProfileSerializer
+from .serializers import UserSerializer, UserProfileSerializer, ProfileChangeSerializer
 
 
 
@@ -77,7 +77,7 @@ class UserProfileView(APIView):
         if request.user != user:
             raise PermissionDenied("수정 권한이 없습니다")
 
-        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+        serializer = ProfileChangeSerializer(user, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

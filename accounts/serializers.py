@@ -37,3 +37,9 @@ class UserProfileSerializer(UserSerializer):
 
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('created_at', 'bio', 'karma', 'articles', 'profile_comments', 'like_article_list', 'like_comment_list' )
+
+
+class ProfileChangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username','nickname','created_at','bio')
