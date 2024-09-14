@@ -9,6 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
+    author = serializers.ReadOnlyField(source='author.username')
 
     def get_like_count(self, obj):
         return obj.likes.all().count()
@@ -19,13 +20,14 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ("article",)
 
 class ArticleSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')  
     like_count = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
-    category = serializers.StringRelatedField()  # 카테고리 이름 반환
+    category = serializers.ChoiceField(choices=[('News', 'News'), ('자유게시판', '자유게시판')])
 
     def get_like_count(self, obj):
         return obj.likes.all().count()
 
     class Meta:
         model = Article
-        fields = ('id', "title", "content", "image", "url", "author", "like_count", "comments", "category")
+        fields = ('id',  "category", "title", "image","content", "author", "url", "like_count", "comments")
