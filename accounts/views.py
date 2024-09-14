@@ -1,4 +1,5 @@
-from django.shortcuts import  get_object_or_404
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from rest_framework import status
 from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer, UserProfileSerializer
+
 
 
 class UserCreateView(APIView):
