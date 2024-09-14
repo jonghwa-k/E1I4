@@ -20,9 +20,9 @@ On the Tress website, you can find a trendy hair news board and a free board whe
 ## Team Roles and Responsibilities
 | Team Member      | Responsibilities                                                                                           |
 |:-----------------|:----------------------------------------------------------------------------------------------------------|
-| 이종화(Leader) | - Initial Setup<br>- Profile Features (view my posts/comments, view posts/comments I liked)                |
+| 이종화(Leader) | - Initial Setup<br>- Profile Features ( edit profile, view my posts/comments, view posts/comments I liked)                |
 | 김상아           | - Wireframe Design<br>- Posting Features (like posts, like comments, write comments, edit comments, delete comments) |
-| 김석환          | - ERD Design<br>- Member Features (sign up, login, logout, view profile, edit profile, change password, deactivate account)<br>- Posting Features (create posts, view post list) |
+| 김석환          | - ERD Design<br>- Member Features (sign up, login, logout, view profile, change password, deactivate account)<br>- Posting Features (create posts, view post list) |
 | 유정원           | - Member Features (sign up, login, logout, view profile, edit profile, change password, deactivate account)<br>- Posting Features (categories, search, scoring system) |
 | 윤율             | - API Documentation<br>- SA (System Architecture) Document<br>- Posting Features (view post details, edit posts, delete posts) |
 
