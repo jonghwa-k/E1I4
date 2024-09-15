@@ -13,8 +13,8 @@ On the Tress website, you can find a trendy hair news board and a free board whe
 ---
 
 ## Development Period
-- Start Date: 2024.08.20
-- End Date: 2024.08.28
+- Start Date: 2024.09.10
+- End Date: 2024.09.20
 
 ---
 ## Team Roles and Responsibilities
