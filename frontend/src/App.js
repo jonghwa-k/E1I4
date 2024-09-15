@@ -17,16 +17,6 @@ function App() {
       });
   }, []);
 
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <h1>{message}</h1>  {/* API에서 받아온 메시지 표시 */}
-  //       <p>
-  //         This is a message from Django API.
-  //       </p>
-  //     </header>
-  //   </div>
-  // );
   return (
     <div>
       <CustomNavbar />
