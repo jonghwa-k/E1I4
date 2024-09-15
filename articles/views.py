@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import filters, status, generics, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import AllowAny
-from .serializers import ArticleSerializer, CommentSerializer, CategorySerializer,ArticleListSerializer
+from .serializers import ArticleSerializer, CommentSerializer, CategorySerializer, AriticleListSerializer
 from .models import Article, Comment, Category
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -25,7 +25,7 @@ class CategoryListCreateAPIView(generics.ListCreateAPIView):
 # 게시글 작성 및 목록 조회 API
 class ArticleCreateAPIView(generics.ListCreateAPIView):
     queryset = Article.objects.all()
-    serializer_class = ArticleListSerializer
+    serializer_class = AriticleListSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['title', 'content', 'author__username', 'category']

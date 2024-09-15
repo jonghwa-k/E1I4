@@ -48,16 +48,12 @@ class CommentContentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['content']
 
-
-class ArticleListSerializer(serializers.ModelSerializer):
-    nickname = serializers.SerializerMethodField() 
+class AriticleListSerializer(serializers.ModelSerializer):
+    nickname = serializers.SerializerMethodField()
     
     def get_nickname(self, obj):
         return obj.author.nickname
-
-
+    
     class Meta:
         model = Article
-        fields = ['title', 'image','nickname',]
-
-
+        fields = ('title', 'image', 'nickname')
