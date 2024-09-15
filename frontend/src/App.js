@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import CustomNavbar from './CustomNavbar';
 
 function App() {
   // 상태 변수 설정
@@ -16,16 +17,22 @@ function App() {
       });
   }, []);
 
+  // return (
+  //   <div className="App">
+  //     <header className="App-header">
+  //       <h1>{message}</h1>  {/* API에서 받아온 메시지 표시 */}
+  //       <p>
+  //         This is a message from Django API.
+  //       </p>
+  //     </header>
+  //   </div>
+  // );
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>{message}</h1>  {/* API에서 받아온 메시지 표시 */}
-        <p>
-          This is a message from Django API.
-        </p>
-      </header>
+    <div>
+      <CustomNavbar />
+      <h1>Main Page</h1>
     </div>
-  );
+  )
 }
 
 export default App;
