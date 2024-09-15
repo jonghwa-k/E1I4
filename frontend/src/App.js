@@ -30,7 +30,7 @@ function App() {
   return (
     <div>
       <CustomNavbar />
-      <h1>Main Page</h1>
+      <h1>TRESS</h1>
     </div>
   )
 }

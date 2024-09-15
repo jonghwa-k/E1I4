@@ -4,7 +4,7 @@ import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 const CustomNavbar = () => {
     return (
         <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="#">KH 트렌드</Navbar.Brand>
+        <Navbar.Brand href="#">TRESS</Navbar.Brand>
         <Nav className="mr-auto">
             <Nav.Link href="#">최신글</Nav.Link>
             <Nav.Link href="#">인기글</Nav.Link>
