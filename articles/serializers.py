@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Article, Comment, Category
 
 
+
 # 카테고리 Serializer
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,8 +50,14 @@ class CommentContentSerializer(serializers.ModelSerializer):
 
 
 class ArticleListSerializer(serializers.ModelSerializer):
+    nickname = serializers.SerializerMethodField() 
+    
+    def get_nickname(self, obj):
+        return obj.author.nickname
+
+
     class Meta:
         model = Article
-        fields = ['title', 'image']
+        fields = ['title', 'image','nickname',]
 
 
