@@ -27,6 +27,7 @@ class Article(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='News')
     likes = models.ManyToManyField(User, related_name="like_article", blank=True)
 
+
     def total_likes(self):
         return self.likes.count()
         
