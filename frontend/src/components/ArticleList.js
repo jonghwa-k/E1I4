@@ -7,7 +7,7 @@ const Articles = () => {
 
     useEffect(() => {
         // API에서 데이터를 가져옴
-        axios.get('/articles/')
+        axios.get(`http://localhost:8000/api/articles/`)
             .then(response => {
                 setArticles(response.data);
             })

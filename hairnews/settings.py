@@ -41,15 +41,12 @@ INSTALLED_APPS = [
     # Third-party
     'django_seed',
     'django_filters',
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     # local
     'articles',
     'accounts',
-]
-
-INSTALLED_APPS += [
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
