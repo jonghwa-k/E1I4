@@ -28,7 +28,7 @@ class ArticleCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    search_fields = ['title', 'content', 'author__username', 'category']
+    search_fields = ['title', 'content', 'author__username',]
     filterset_fields = ['category']
     ordering_fields = ['created_at']
     ordering = ['-created_at']
